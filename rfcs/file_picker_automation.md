@@ -23,10 +23,11 @@ This RFC proposes adding an ahead-of-time (AOT) pre-configuration API to `testdr
 
 Because `testdriver.js` is intended for user/browser interaction rather than OS filesystem management, and to avoid exposing host OS absolute paths to JavaScript tests, tests pass **relative paths** to `set_file_picker_behavior` while `wptrunner` resolves them to absolute host paths:
 
-* Following the established WebExtensions pattern in `wptrunner` (using `testdriver.js?feature=...` or path matching such as `file-system-access/local_*`), `wptrunner` automatically provisions an isolated writable directory in the system temporary folder (via Python's `tempfile` module) before the test starts and resolves relative paths (e.g. `paths: ["."]`) under that temporary directory.
-* For read-only tests that do not request a writable temporary directory, relative paths are resolved against the test's source directory (matching `WebExtensionsProtocolPart._resolve_path`).
-* Deterministic cleanup of temporary directories is handled by `wptrunner` upon test completion or runner exit, preventing source tree corruption, parallel-run flakiness, and disk leaks even if browser tests crash.
-
+* By default, relative paths (e.g. `paths: ["resources/data/testfile.txt"]`) are resolved against the test's source directory (matching `WebExtensionsProtocolPart._resolve_path`), allowing read-only tests to access existing test files without any extra configuration.
+* For tests that need a writable directory, `wptrunner` provisions an isolated directory in the system temporary folder (via Python's `tempfile` module), preventing source tree corruption and parallel-run flakiness. Two mechanisms are considered for triggering this:
+  * **Path prefix**: Any path starting with `"writable/"` (e.g. `paths: ["writable/"]` or `paths: ["writable/testfile.txt"]`) causes `wptrunner` to create the temporary directory on demand and resolve the path under it.
+  * **Test-level declaration**: Following the WebExtensions pattern in `wptrunner`, tests specify `testdriver.js?feature=createTempDirectory` (or a `META` tag), which provisions the temporary directory before the test starts and resolves relative paths (e.g. `paths: ["."]`) under it.
+* Deterministic cleanup of temporary directories is handled by `wptrunner` upon test completion or runner exit, preventing disk leaks even if browser tests crash.
 
 ## Protocol & Runner Integration
 
@@ -44,4 +45,3 @@ Links:
 
 * **API Surface:** Minimal impact on `testdriver.js`, adding only a single extensible `set_file_picker_behavior` method while keeping temporary directory provisioning and path resolution internal to `wptrunner`.
 * **Protocol Alignment:** Requires standardizing the ahead-of-time file dialog behavior command in WebDriver BiDi (tracked in [w3c/webdriver-bidi#1177](https://github.com/w3c/webdriver-bidi/issues/1177)).
-* **Remote / Mobile Environments:** Runner-side temporary directory provisioning and path resolution are scoped to co-located desktop CI where the runner and browser share the filesystem; remote device bridging (e.g. Android) can be added as a future transport extension.
