@@ -13,10 +13,10 @@ This RFC proposes adding an ahead-of-time (AOT) pre-configuration API to `testdr
 
 ### **1. File Picker Automation API (`testdriver.js`)**
 
-* `test_driver.set_file_picker_behavior(options, context = null)`: Pre-configures the behavior of the next file or directory picker (one-shot).
+* `test_driver.set_file_picker_behavior(options)`: Pre-configures the behavior of the next file or directory picker (one-shot).
   * `options.action`: `"accept"` or `"cancel"`.
   * `options.paths`: An array of relative paths to be selected when `action` is `"accept"`, and disallowed when `action` is `"cancel"`.
-  * **Acceptance (`{ action: "accept", paths: [...] }`)**: Pre-configures the paths to return. Passing an empty array (`[]`), non-array, or omitting paths throws an upfront `TypeError`, as confirming zero files is not a valid OS dialog state. Providing multiple paths to a single-select picker (e.g. `showOpenFilePicker({ multiple: false })` or `showSaveFilePicker()`) causes the test harness to fail at dialog invocation.
+  * **Acceptance (`{ action: "accept", paths: [...] }`)**: Pre-configures the paths to return. Passing an empty array (`[]`), non-array, or omitting paths throws an upfront `TypeError`, as confirming zero files is not a valid OS dialog state. Providing multiple paths to a single-select picker (e.g. `showOpenFilePicker({ multiple: false })` or `showSaveFilePicker()`) cancels the dialog, causing the picker call to reject with an `AbortError`.
   * **Cancellation (`{ action: "cancel" }`)**: Simulates user cancellation or dismissing the dialog, causing the next picker call to reject with an `AbortError`.
 
 ### **2. Path Resolution & Temporary Directory Provisioning (`wptrunner`)**
