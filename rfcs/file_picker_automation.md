@@ -45,7 +45,8 @@ Links:
 * [WHATWG HTML PR 13197 (`<input type="file">` hook integration)](https://github.com/whatwg/html/pull/13197)
 * [WICG File System Access PR 477 (`showOpenFilePicker`, `showSaveFilePicker`, `showDirectoryPicker` hook integration)](https://github.com/WICG/file-system-access/pull/477)
 * [Companion WPT PR 64840](https://github.com/web-platform-tests/wpt/pull/64840)
-* [Prototype Implementation in Chromium](https://chromium-review.googlesource.com/c/chromium/src/+/8482432) (to be updated)
+* Implementation in Chromium: [CDP `Browser.setFileChooserBehavior`](https://chromium-review.googlesource.com/c/chromium/src/+/8602432), [directory confirmations](https://chromium-review.googlesource.com/c/chromium/src/+/8814544), [chromium-bidi `browser.setFileDialogBehavior`](https://chromium-review.googlesource.com/c/chromium/src/+/8793617)
+* [testdriver.js integration prototype in Chromium](https://chromium-review.googlesource.com/c/chromium/src/+/8482432) (to be updated)
 
 
 ## Risks
