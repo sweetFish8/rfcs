@@ -16,9 +16,9 @@ Following discussions at TPAC 2026 in the WPT and WebDriver BiDi working groups 
 ### **1. File Picker Automation API (`testdriver.js` / WebDriver BiDi `browser.setFileDialogBehavior`)**
 
 * `test_driver.bidi.browser.set_file_dialog_behavior(params)`: Pre-configures the behavior of file and directory picker dialogs. Maps directly onto WebDriver BiDi `browser.setFileDialogBehavior` ([w3c/webdriver-bidi#1177](https://github.com/w3c/webdriver-bidi/issues/1177), [w3c/webdriver-bidi#1193](https://github.com/w3c/webdriver-bidi/pull/1193)).
-  * `params.fileDialogBehavior`: `{ type: "accept", paths: [...] }`, `{ type: "cancel" }`, or `null` (to reset to the default behavior).
-  * **Acceptance (`{ type: "accept", paths: [...] }`)**: Pre-configures the paths (returned by temporary directory/file provisioning below) to select when a file or directory dialog opens. Providing a non-empty array of paths is required. Providing multiple paths to a single-select picker (e.g. `showOpenFilePicker({ multiple: false })` or `showSaveFilePicker()`), or paths that do not exist or do not match the requested dialog type, cancels the dialog (causing the picker call to reject with an `AbortError` or fire a `cancel` event on `<input type="file">`).
-  * **Cancellation (`{ type: "cancel" }`)**: Simulates user cancellation or dismissing the dialog, causing the picker call to reject with an `AbortError` (or fire a `cancel` event on `<input type="file">`).
+  * `params.fileDialogBehavior`: `{ type: "accept", paths: [...] }`, `{ type: "dismiss" }`, or `null` (to reset to the default behavior).
+  * **Acceptance (`{ type: "accept", paths: [...] }`)**: Pre-configures the paths (returned by temporary directory/file provisioning below) to select when a file or directory dialog opens. Providing a non-empty array of paths is required. Providing multiple paths to a single-select picker (e.g. `showOpenFilePicker({ multiple: false })` or `showSaveFilePicker()`), or paths that do not exist or do not match the requested dialog type, dismisses the dialog (causing the picker call to reject with an `AbortError` or fire a `cancel` event on `<input type="file">`).
+  * **Dismissal (`{ type: "dismiss" }`)**: Simulates the user dismissing the dialog, causing the picker call to reject with an `AbortError` (or fire a `cancel` event on `<input type="file">`).
 
 ### **2. Temporary Directory & File Provisioning (`testdriver.js` / WebDriver BiDi `browser.createTemporaryDirectory` & `browser.removeTemporaryDirectory`)**
 
